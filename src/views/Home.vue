@@ -7,13 +7,17 @@
           <p class="title"> Está tentando <span class="green">emagrecer</span>, mas não consegue <b>ter resultados satisfatórios</b>? <br/>Descubra agora como <b>milhares de pessoas</b> estão perdendo peso e <span class="green">mudando de vida</span>!</p>
           <p class="second-title">Aumente o som e assista o video abaixo:</p>
         </div>
-        <video-player  
-          class="video-player-box"
-          ref="videoPlayer"
-          :options="playerOptions"
-          :playsinline="true"
-          customEventName="customstatechangedeventname">
-        </video-player>
+        <div class="player" @touchstart="videoClick">
+          <video-player
+            class="video-player-box"
+            ref="videoPlayer"
+            :options="playerOptions"
+            :playsinline="true"
+            customEventName="customstatechangedeventname"
+            v-video-player:myVideoPlayer="playerOptions"
+            @timeupdate="onPlayerTimeupdate($event)">
+          </video-player>
+        </div>
       </div>
     </center>
   </div>
@@ -30,8 +34,9 @@ export default {
   },
   data() {
     return {
+      showButton: false,
       playerOptions: {
-        height: '360',
+        width: '360',
         sources: [{
           type: "video/mp4",
           src: "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
@@ -41,9 +46,38 @@ export default {
     }
   },
   mounted(){
-    console.log(window.innerHeight);
-    this.playerOptions.height = parseInt(window.innerHeight)/2.2;
-  }
+    console.log(window.innerWidth);
+    if (window.innerWidth < 1000){
+      this.playerOptions.width = parseInt(window.innerWidth)/1.2;
+    }else{
+      this.playerOptions.width = parseInt(window.innerWidth)/2.2;
+    }
+  },
+  methods:{
+    onPlayerTimeupdate(e){
+      console.log(e)
+      console.log(e.cache_.currentTime);
+      if(e.cache_.currentTime>492){
+        this.showButton = true;
+      }
+    },
+    videoClick(e){
+      console.log(e)
+      console.log(this);
+      console.log(this.player);
+      if(this.player.paused()){
+        this.player.play();
+      }
+      else{
+        this.player.pause();
+      }
+    }
+  },
+  computed: {
+      player() {
+        return this.$refs.videoPlayer.player
+      }
+    },
 }
 </script>
 
@@ -114,6 +148,11 @@ export default {
   }
 }
 @media only screen and (max-width: 1000px) {
+  .vjs-big-play-button{
+    margin-top: 20% !important;
+    margin-left: 32% !important;
+    width: 20vw;
+  }
   .all {
     font-family: 'BenchNine', sans-serif;
     width: 100vw;
