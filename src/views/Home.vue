@@ -40,6 +40,10 @@ export default {
       }
     }
   },
+  mounted(){
+    console.log(window.innerHeight);
+    this.playerOptions.height = parseInt(window.innerHeight)/2.2;
+  }
 }
 </script>
 
@@ -49,8 +53,8 @@ export default {
   user-select: none;
 }
 .vjs-big-play-button{
-  margin-top: 150px !important;
-  margin-left: 260px !important;
+  margin-top: 25% !important;
+  margin-left: 40% !important;
 }
 .vjs-control-bar{
   visibility: hidden !important;
